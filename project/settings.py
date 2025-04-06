@@ -98,7 +98,7 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     },
-    'users': {
+    'listing': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'listing',
         'USER': 'postgres',
@@ -107,6 +107,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+DATABASE_ROUTERS = ['user.router.AuthRouter', ]
 
 
 # Password validation
@@ -152,3 +154,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AUTH_USER_MODEL = 'user.UserAccount'
