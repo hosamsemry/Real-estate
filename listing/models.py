@@ -1,6 +1,7 @@
 from django.db import models
-from django.utils.timezone import now
+from django.conf import settings
 
+    
 class Listing(models.Model):
 
     class SaleType(models.TextChoices):
@@ -12,6 +13,8 @@ class Listing(models.Model):
         HOUSE = 'House'
         TOWNHOUSE = 'Townhouse'
 
+    
+    
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     address = models.CharField(max_length=255)
