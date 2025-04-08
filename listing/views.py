@@ -53,6 +53,97 @@ class ManageListingView(APIView):
             )
 
 
+    def put(self, request):
+        try:
+            user = request.user
+            if not user.is_realtor:
+                return Response(
+                    {'error': 'You do not have permission to perform this action.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            slug = request.query_params.get('slug')
+            if not slug:
+                return Response({'error': 'Slug is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                listing = Listing.objects.get(slug=slug, is_published=True)
+            except Listing.DoesNotExist:
+                return Response({'error': 'Listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ListingSerializer(listing, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'message': 'Listing updated successfully.'}, status=status.HTTP_200_OK)
+
+            return Response({'error': 'Invalid data.', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print("Unexpected error in PUT:", e)
+            return Response(
+                {'error': 'An error occurred while updating the listing.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+    def patch(self, request):
+        try:
+            user = request.user
+            if not user.is_realtor:
+                return Response(
+                    {'error': 'You do not have permission to perform this action.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            slug = request.query_params.get('slug')
+            if not slug:
+                return Response({'error': 'Slug is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                listing = Listing.objects.get(slug=slug, is_published=True)
+            except Listing.DoesNotExist:
+                return Response({'error': 'Listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = ListingSerializer(listing, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response({'message': 'Listing updated successfully.'}, status=status.HTTP_200_OK)
+
+            return Response({'error': 'Invalid data.', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            print("Unexpected error in PATCH:", e)
+            return Response(
+                {'error': 'An error occurred while updating the listing.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+    def delete(self, request):
+        try:
+            user = request.user
+            if not user.is_realtor:
+                return Response(
+                    {'error': 'You do not have permission to perform this action.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            slug = request.query_params.get('slug')
+            if not slug:
+                return Response({'error': 'Slug is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                listing = Listing.objects.get(slug=slug, is_published=True)
+                listing.delete()
+                return Response({'message': 'Listing deleted successfully.'}, status=status.HTTP_200_OK)
+            except Listing.DoesNotExist:
+                return Response({'error': 'Listing not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        except Exception as e:
+            print("Unexpected error in DELETE:", e)
+            return Response(
+                {'error': 'An error occurred while deleting the listing.'},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 class ListingDetailView(APIView):
     def get(self, request):
         try:
@@ -91,4 +182,4 @@ class ListingsView(APIView):
             return Response(
                 {'error': 'An error occurred while retrieving listings.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            )
+            )     
