@@ -6,4 +6,5 @@ urlpatterns = [
     path('manage/', ManageListingView.as_view(), name='manage-listing'),
     path('detail/', ListingDetailView.as_view(), name='listing-detail'),
     path('all/', ListingsView.as_view(), name='listing-list'),
+    path('search/', SearchListingsView.as_view(), name='listing-search'),
 ]

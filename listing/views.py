@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from .models import Listing
 from .serializers import ListingSerializer
+from django.contrib.postgres.search import SearchQuery, SearchVector
 
 class ManageListingView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -183,3 +184,25 @@ class ListingsView(APIView):
                 {'error': 'An error occurred while retrieving listings.'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )     
+        
+class SearchListingsView(APIView):
+    permission_classes = (permissions.AllowAny, )
+
+    def get(self, request):
+        try:
+            search = request.query_params.get('search')
+            vector = SearchVector('title', 'description')
+            query = SearchQuery(search)
+            listings = Listing.objects.annotate(
+                search=vector
+            ).filter(
+                search=query,
+                is_published=True
+            ).distinct()
+            serializer = ListingSerializer(listings, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Listing.DoesNotExist:
+            return Response(
+                {'error': 'No listings found matching the search criteria.'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
