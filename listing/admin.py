@@ -1,3 +1,27 @@
 from django.contrib import admin
+from .models import Listing
 
-# Register your models here.
+class ListingAdmin(admin.ModelAdmin):
+    using = 'listing'
+    list_display = ('id', 'realtor', 'title', 'slug', 'price', 'is_published', 'created_at')
+    list_display_links = ('id', 'title', 'realtor', 'slug')
+    search_fields = ('title', 'description')
+    list_filter = ('is_published', 'realtor')
+    list_per_page = 25
+
+    def save_model(self, request, obj, form, change):
+        obj.save(using=self.using)
+
+    def delete_model(self, request, obj):
+        obj.delete(using=self.using)
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).using(self.using)
+    
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        return super().formfield_for_foreignkey(db_field, request, using=self.using, **kwargs)
+    
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        return super().formfield_for_manytomany(db_field, request, using=self.using, **kwargs)
+
+admin.site.register(Listing, ListingAdmin)
