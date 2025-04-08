@@ -10,6 +10,13 @@ This is a Django REST Framework-based backend project for a real estate listing 
 - 🛡️ Permissions and role-based access control
 - 🗂️ Media uploads for listing images
 ---
+## 🏗️ Tech Stack
+- Python 
+- Django
+- Django REST Framework
+- PostgreSQL
+- SimpleJWT for auth
+---
 ## API Endpoints
 ### 🔑 Authentication
 - `POST /api/token/` – Get access and refresh tokens
