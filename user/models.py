@@ -50,6 +50,7 @@ class UserAccountManager(BaseUserManager):
 class UserAccount(AbstractUser, PermissionsMixin):
 
     username = None
+    name = models.CharField(max_length=255,default='hosam')
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

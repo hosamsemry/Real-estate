@@ -14,7 +14,7 @@ class Listing(models.Model):
         TOWNHOUSE = 'Townhouse'
 
     
-    
+    realtor = models.EmailField(max_length=255, default=settings.DEFAULT_FROM_EMAIL)
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
     address = models.CharField(max_length=255)
